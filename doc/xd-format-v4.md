@@ -178,7 +178,7 @@ them:
 
     A1. Sugar ___ ~ CONE ~ CANE
 
-#### Clue Metdata
+#### Clue Metadata
 
 If you need to attach metadata to a clue, on a new line after the clue replace the ". "
 with a " ^" - the key for the metadata is determined as being in-between the hat and
@@ -186,6 +186,9 @@ colon:
 
     A1. Gardener's concerns with A2 and D4. ~ BULB
     A1 ^Refs: A2 D4
+
+Metadata keys are case-insensitive: `^Refs:`, `^refs:` and `^REFS:` are the
+same key.  Tools that write .xd should emit them in titlecase (`^Refs:`).
 
 The xd spec does not reserve any keys.
 
@@ -279,7 +282,7 @@ The CSS-like parser should be able to handle:
     A { bar-top: true }
     ```
 
-* Opening many characters at once with a comma: `A,B { background: circle }`
+* Opening many characters at once with a comma: `A, B { background: circle }`
 * Separating many properties via semi colons: `A { background: circle; bar-top: true }`
 * An optional trailing semi colon after the last property: `A { background: circle; }`
 * Quoted values inside a rule body, within which none of `}`, `:`, `;` or
@@ -287,7 +290,8 @@ The CSS-like parser should be able to handle:
 * Rejecting a comma inside a rule body, where it is never a separator:
   `background-size: 2 2`, never `background-size: 2, 2`
 
-[Explicit colors and light/dark variants are under discussion; see [#5](https://github.com/century-arcade/xdformat/issues/5).]
+Explicit colors and light/dark variants are under discussion in
+[#5](https://github.com/century-arcade/xdformat/issues/5).
 
 ### xdown Formatting
 
@@ -401,7 +405,8 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * Section headings are recommended, and required to use a design section; the
   implicit section order is still valid
 * A grid cell holds exactly one Unicode codepoint; larger graphemes are rebuses.
-* Metadata field keys are case-insensitive.
+* Metadata field keys and clue metadata keys are case-insensitive; writers
+  should emit titlecase.
 * Metadata fields can now be xdown formatted
 * A rebus key may be assigned multiple values, declaring a Schrödinger cell.
 * The `## Design` section (adopted from Puzzmo's extension, without its
