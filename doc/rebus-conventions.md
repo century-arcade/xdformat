@@ -5,7 +5,7 @@
 
 ## Status
 
-> **Update 2026-07-10:** the v4.0 draft of the spec adopts the direction
+> **Update 2026-07-10:** the [v4.0 draft](xd-format-v4.md) of the spec adopts the direction
 > recommended in [§5](#5-inline-answer-forms-and-why-they-should-probably-go-away):
 > repeated rebus keys (`Rebus: 1=O 1=A`) declare Schrödinger cells, and a clue
 > line lists all valid answers, ' ~ '-separated, with rebuses always expanded.
