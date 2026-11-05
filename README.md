@@ -64,7 +64,8 @@ The converters need the `[convert]` extra (pulls in [puzpy](https://github.com/a
 
 ## Related repos
 
-- [century-arcade/xd](https://github.com/century-arcade/xd) -- the corpus pipeline: downloads puzzles from many sources, converts them (using additional publisher-specific converters), analyzes grids and clues, validates with `xdlint.py`, and builds the website at [xd.saul.pw](https://xd.saul.pw)
+- [century-arcade/xd](https://github.com/century-arcade/xd) -- the corpus pipeline: downloads puzzles from many sources, converts them (using additional publisher-specific converters), analyzes grids and clues, validates with xdlint, and builds the website at [xd.saul.pw](https://xd.saul.pw)
+- [xdlint](https://pypi.org/project/xdlint/) -- the .xd validator and fixer (`pip install xdlint`, or `uvx xdlint`); its source is `xdlint.py` in century-arcade/xd
 - gxd -- the corpus itself, 95k+ puzzles in .xd format (private; join [#crosswords on the Discord](https://saul.pw/chat) to discuss getting access)
 - [century-arcade/xdcontrib](https://github.com/century-arcade/xdcontrib) -- deprecated; its minimal converters were merged into this repo
 

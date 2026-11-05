@@ -6,7 +6,7 @@
 
 * The [`xdformat`](../README.md) Python package in this repo has the reference parser and serializer, and converters from Across-Lite .puz (`puz2xd`) and .ipuz (`ipuz2xd`).
 
-* The full download/convert/analyze pipeline, including converters for other publisher-specific formats and the `xdlint.py` validator, lives at [century-arcade/xd](https://github.com/century-arcade/xd).
+* The full download/convert/analyze pipeline, including converters for other publisher-specific formats, lives at [century-arcade/xd](https://github.com/century-arcade/xd). Its validator is on PyPI as [`xdlint`](https://pypi.org/project/xdlint/) (`pip install xdlint`, or `uvx xdlint`).
 
 ## Full Example
 
