@@ -6,7 +6,7 @@ See doc/xd-format.md for the format specification.
 import re
 import string
 
-from .utils import parse_pathname, parse_pubid, warn
+from .utils import parse_pathname, warn
 
 
 class Error(Exception):
@@ -53,18 +53,13 @@ def parse(fn):
 
 
 class xdfile:
-    def __init__(self, xd_contents=None, filename=None, pubid=None):
+    def __init__(self, xd_contents=None, filename=None):
         self.filename = filename
         self.headers = {}  # [key] -> value or list of values
         self.grid = []  # list of string rows
         self.clues = []  # list of (("A", 21), "{*Bold*}, {/italic/}, {_underscore_}, or {-overstrike-}", "MARKUP")
         self.clue_metadata = {}  # [index in self.clues] -> list of (key, value)
         self.notes = ""
-
-        if filename:
-            self._publication_id = pubid or parse_pubid(filename)
-        else:
-            self._publication_id = pubid
 
         if xd_contents:
             self.parse_xd(xd_contents)
@@ -85,28 +80,11 @@ class xdfile:
     def sizestr(self):
         return "%dx%d%s%s" % (self.width(), self.height(), self.get_header("Rebus") and "R" or "", self.get_header("Special") and "S" or "")
 
-    def xdid(self):
-        if not self._publication_id:
-            raise Error("No Publication Id in '%s'" % self.filename)
-
-        num = self.get_header("Number")
-        if num:
-            return '%s-%03d' % (self._publication_id, int(num))
-
-        assert self.date()
-        return '%s%s' % (self._publication_id, self.date())
-
     def date(self):
-        dt = self.get_header("Date")
-        if not dt and self.filename and self._publication_id:
-            dt = parse_pathname(self.filename).base[len(self._publication_id):]
-        return dt
-
-    def year(self):
-        return self.date().split('-')[0]
-
-    def publication_id(self):  # "nyt"
-        return self._publication_id
+        """The Date header. A puzzle's place in a collection (its publication
+        id, an id built from its filename) is the collection's business, not
+        the format's: for the gxd corpus see xdfile/ids.py in century-arcade/xd."""
+        return self.get_header("Date")
 
     def iterdiffs(self, other):
         for k in set(self.headers.keys()) | set(other.headers.keys()):
