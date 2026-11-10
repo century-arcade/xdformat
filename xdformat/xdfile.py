@@ -6,7 +6,7 @@ See doc/xd-format.md for the format specification.
 import re
 import string
 
-from .utils import parse_pathname, parse_pubid, warn
+from .utils import dated_xdid, parse_pathname, parse_pubid, warn
 
 
 class Error(Exception):
@@ -94,12 +94,14 @@ class xdfile:
             return '%s-%03d' % (self._publication_id, int(num))
 
         assert self.date()
-        return '%s%s' % (self._publication_id, self.date())
+        return dated_xdid(self._publication_id, self.date())
 
     def date(self):
         dt = self.get_header("Date")
         if not dt and self.filename and self._publication_id:
             dt = parse_pathname(self.filename).base[len(self._publication_id):]
+            if dt[:1] == '-' and dt[1:5].isdigit() and dt[5:6] == '-':  # club72-2020-01-01
+                dt = dt[1:]
         return dt
 
     def year(self):
