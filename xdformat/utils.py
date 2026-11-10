@@ -29,11 +29,6 @@ def parse_pathname(path):
     return nt(path=path, base=base, ext=ext, filename=fn)
 
 
-def parse_pubid(fn):
-    m = re.search("(^[A-Za-z0-9][A-Za-z]*)", parse_pathname(fn).base)
-    return m.group(1).lower() if m else None
-
-
 def construct_date(y, m, d):
     thisyear = datetime.datetime.today().year
     year, mon, day = int(y), int(m), int(d)

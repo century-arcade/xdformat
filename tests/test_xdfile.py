@@ -3,7 +3,7 @@
 import datetime
 import os
 
-from xdformat.utils import parse_pathname, parse_date_from_filename, parse_pubid
+from xdformat.utils import parse_pathname, parse_date_from_filename
 from xdformat.xdfile import xdfile as XDFile
 import xdformat
 
@@ -19,11 +19,6 @@ def test_parse_date():
     date = parse_date_from_filename(test_selection)
     assert isinstance(date, datetime.date)
     assert date.strftime('%a %b %d %Y') == 'Sat Jan 01 1955'
-
-
-def test_parse_pubid():
-    pubid = parse_pubid(test_selection)
-    assert pubid == 'nyt'
 
 
 SAMPLE_XD = """\
@@ -86,15 +81,18 @@ def test_answers_from_grid():
     assert answers == {'A1': 'ABC', 'A3': 'FGH', 'D1': 'ADF', 'D2': 'CEH'}
 
 
-def test_no_pubid_ok():
-    """A puzzle without a recognizable pubid still parses; only xdid() complains."""
+def test_no_filename_ok():
+    """A puzzle needs no filename, and its date is its Date header."""
     xd = XDFile(SAMPLE_XD)
     assert xd.get_header('Title') == 'Test Puzzle'
-    try:
-        xd.xdid()
-        assert False, "xdid() should raise without a pubid"
-    except xdformat.Error:
-        pass
+    assert xd.date() == '2024-01-01'
+
+
+def test_date_is_not_read_from_the_filename():
+    """The format knows nothing about a collection's file naming."""
+    xd = XDFile(SAMPLE_XD.replace('Date: 2024-01-01\n', ''), filename='nyt1955-01-01.xd')
+    assert not xd.date()
+    assert not hasattr(xd, 'xdid') and not hasattr(xd, 'publication_id')
 
 
 def test_fixture_rebus_roundtrip():
