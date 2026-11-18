@@ -46,9 +46,7 @@ text tool can read.
   (`puz.py` at commit `e0c4744`), including its extension sections.  Where
   puz.py does not interpret something, this document says so.
 
-Unmodified copies of the ipuz specification and the JPZ puzzle schema are
-being added to this repo under `doc/references/` (branch
-`ipuz-spec-reference`, not yet merged).
+ipuz is a trademark of Puzzazz, Inc., used with permission.
 
 ### Categories
 
