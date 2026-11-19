@@ -101,6 +101,14 @@ The value of a metadata field may carry inline markup for italics, links,
 images and more; the syntax is given in [xdown Formatting](#xdown-formatting)
 below.
 
+A `Numbering:` field with a character map of the grid after the clues
+(`Numbering: a=10 x=34`) appears in two gxd files,
+`nyworld/1913/nyw1913-12-21.xd` and `nyw1913-12-28.xd`.  It is not part of
+the spec and is deprecated: its one-character labels run out past 61, and the
+map in the first is wrong.  Use `^Printed:` and `^Fits:`
+([Clue Metadata](#clue-metadata)) and `given: true`
+([Design](#design-optional-section)) instead.
+
 ### Grid
 
 Optional leading whitespace and trailing whitespace on each line.  Never any
@@ -196,7 +204,37 @@ colon:
 Metadata keys are case-insensitive: `^Refs:`, `^refs:` and `^REFS:` are the
 same key.  Tools that write .xd should emit them in titlecase (`^Refs:`).
 
-The xd spec does not reserve any keys.
+The spec reserves two keys, for a source that labels its clues other than by
+xd's computed A/D number:
+
+* `^Printed:` -- the clue's label exactly as the source printed it, when that
+  differs from its xd reference.  Misprints are kept as printed.
+* `^Fits:` -- the label that fits the grid, when the printed one is a
+  misprint.
+
+Other keys are not reserved.
+
+The 1913-14 New York World named each word by the labels printed in its first
+and last squares; a label may be a given letter (see
+[Design](#design-optional-section)).  Clues keep xd's own numbering, and carry
+the World's pair:
+
+    A6. A written acknowledgment. ~ RECEIPT
+    A6 ^Printed: 4-5
+    A16. What this puzzle is. ~ HARD
+    A16 ^Printed: 38-39
+    A16 ^Fits: 18-19
+    D2. Part of your head. ~ FACE
+    D2 ^Printed: F-7
+
+A tool can redraw the source's own numbers from these: when a label is a pair
+`x-y`, the run's first square takes `x` and its last square `y`, from
+`^Fits:` if present, else `^Printed:`.  [The clue reference stays computed,
+so every tool that numbers a grid still finds the clue; the printed label is
+history.]
+
+A word with no printed clue still has a clue line, with an empty body
+(`A4. ~ SALES`), so that every slot of the grid is an entry.
 
 ### Design (optional section)
 
@@ -233,6 +271,26 @@ Defined properties:
   downward; defaults to `1 1`
 * `bar-top: true` -- a bar on the top edge of the cell (barred grids)
 * `bar-left: true` -- a bar on the left edge of the cell
+* `given: true` -- the cell's letter is printed in the puzzle, for the solver
+  to start from
+
+A given cell keeps its letter in the grid, which holds the solution; the
+design says it was printed.  A word printed whole as a given has no clue line.
+New York World No. 1 (1913) gives FUN across its second row:
+
+    G { given: true }
+
+    .............
+    .....GGG.....
+    .............
+    [...]
+
+[Givens are marked cell by cell, not inferred from unclued words: some are
+single letters, and some unclued words are not given.]
+
+Where a given word and a clued word share one unbroken run with no block
+between them (World No. 27), a `bar-top` or `bar-left` between the two splits
+the run, so each word is its own slot.
 
 An image is given as a CSS `url()` with a quoted argument.  The url is either
 a data URI, which keeps the image in the file, or a reference to an image
@@ -430,6 +488,11 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * A `{\literal\}` span passes its content through untouched; it replaces
   backslash escapes, and is how a clue body writes ' ~ '.
 * `{\\}`, an empty literal, is a line break.
+* Clue metadata reserves `^Printed:` (the source's own label) and `^Fits:`
+  (the label that fits, for a misprint); a clue with no printed body keeps an
+  empty clue line.
+* The `## Design` section adds `given: true` for letters printed in the grid.
+* gxd's ad hoc `Numbering:` field and character map are deprecated.
 
 ### 3.0
 
