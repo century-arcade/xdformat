@@ -207,14 +207,8 @@ the v3 form in older files.]
 
 The section records how the puzzle looked as published.  Everything in it is
 presentation only: it changes nothing about the solution, the entries, the
-numbering or the clues, and a reader that does not draw the puzzle may ignore
-the whole section.
-
-That includes bars.  A bar is drawn on the edge of a cell, for instance to
-show a break between the words of an entry, but it does not end the entry;
-entries and numbering are determined by the grid section alone.  [A barred
-grid, where bars stand in for blocks, is therefore not representable in this
-version; see [#36](https://github.com/century-arcade/xdformat/issues/36).]
+numbering or the clues, and a reader who does not wish to draw the puzzle may 
+ignore the whole section.
 
 The section starts with one or more style definitions, each assigning
 CSS-like properties to a single character, followed by a design grid
