@@ -326,6 +326,14 @@ so that adding one never changes the meaning of an existing file.  A '{'
 followed by any other character (a letter, digit, space, and so on) is literal
 text, so most clue bodies need no escaping.
 
+A reader that meets a span whose type character it does not define shows the
+span's content and drops the rest: the braces, the type characters, and
+anything from the first '|' outside a nested span, which a later version may
+use for attributes.  Markup inside the content is read as usual.  [A file
+written for a later version then still reads sensibly.  A span this version
+doesn't know falls back to its text, the way an image falls back to its alt
+text.]
+
 Seven of them style their content as text:
 
 * `{/italic/}`
@@ -433,6 +441,8 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
   a Schrödinger slot lists all valid fills.  Answers always spell out rebus
   expansions.  An answer is a single word; text following it is ignored.
 * Markup adds subscript, superscript, and small caps, and formally nests.
+* A reader shows the content of a span whose type it does not know, so a
+  later version can add span types.
 * Links and images take named attributes (`href`, `src`, `display`) rather
   than a positional list of parts.
 * A `{\literal\}` span passes its content through untouched; it replaces
