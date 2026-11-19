@@ -205,11 +205,16 @@ colors, bars, and images.  [It replaces the v3 'Special' field, which designated
 lowercase a-z grid cells as "shaded" or "circle"; parsers may still encounter
 the v3 form in older files.]
 
-The section records how the puzzle looked as published.  Its circles, shading,
-colors and images are presentation only: they change nothing about the
-solution or the clues, and a reader that does not draw the puzzle may ignore
-them.  Bars are the exception.  In a barred grid they mark where entries end,
-so a reader that numbers the grid or derives entries from it needs them.
+The section records how the puzzle looked as published.  Everything in it is
+presentation only: it changes nothing about the solution, the entries, the
+numbering or the clues, and a reader that does not draw the puzzle may ignore
+the whole section.
+
+That includes bars.  A bar is drawn on the edge of a cell, for instance to
+show a break between the words of an entry, but it does not end the entry;
+entries and numbering are determined by the grid section alone.  [A barred
+grid, where bars stand in for blocks, is therefore not representable in this
+version; see [#36](https://github.com/century-arcade/xdformat/issues/36).]
 
 The section starts with one or more style definitions, each assigning
 CSS-like properties to a single character, followed by a design grid
@@ -239,7 +244,7 @@ Defined properties:
 * `background-image: url('...')` -- an image drawn in the cell
 * `background-size: N M` -- the image spans N cells to the right and M cells
   downward; defaults to `1 1`
-* `bar-top: true` -- a bar on the top edge of the cell (barred grids)
+* `bar-top: true` -- a bar on the top edge of the cell
 * `bar-left: true` -- a bar on the left edge of the cell
 
 A color is a '#' followed by six hexadecimal digits, red, green and blue, in
@@ -446,7 +451,8 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
   `<style>` wrapper) replaces the 'Special' field and lowercase special cells.
 * A design cell may carry a background color and a letter color, as published.
   A circle is `decoration: circle`, so that a cell can be circled and colored.
-* It is now possible to represent barred-grid Crosswords
+* A design cell may carry a bar on its top or left edge.  Bars are drawn
+  only; barred grids are not yet representable.
 * It is possible to represent background images in the grid
 * A clue line holds a ' ~ '-separated list of answers, usually of size one;
   a Schrödinger slot lists all valid fills.  Answers always spell out rebus
