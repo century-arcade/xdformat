@@ -247,6 +247,10 @@ elsewhere:
 The quotes are required.  A quoted value is taken literally, so the ':', ';'
 and ',' inside either form of url are not read as delimiters.
 
+The url is an absolute URI, as described under
+[xdown Formatting](#xdown-formatting) below; a relative reference has no
+defined meaning.
+
 Prefer a data URI.  An .xd file aims to be a single self-contained document,
 and an external image makes the puzzle depend on a host that may not answer
 for as long as the file exists.
@@ -368,6 +372,13 @@ in the run of text, and `block` renders it on its own line:
 
     A17. Pictured: {!A sperm whale | src: https://example.com/whale.png; display: block!} ~ AHAB
 
+The value of `href` or `src` is an absolute URI: one that begins with a
+scheme, such as `https:` or `data:`.  A relative reference, such as
+`whale.png` or `/img/whale.png`, has no defined meaning, and a writer must not
+emit one.  [An .xd file has no base to resolve it against.  The same file may
+be served from a URL, read from a disk, or stored in a database or an archive,
+and it aims to be a single self-contained document.]
+
 <!-- A color is its text, with `light` and `dark` giving the color to render it
 in under a light theme and under a dark theme:
 
@@ -427,6 +438,8 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * Markup adds subscript, superscript, and small caps, and formally nests.
 * Links and images take named attributes (`href`, `src`, `display`) rather
   than a positional list of parts.
+* A link or image source is an absolute URI; a relative reference has no
+  defined meaning.
 * A `{\literal\}` span passes its content through untouched; it replaces
   backslash escapes, and is how a clue body writes ' ~ '.
 * `{\\}`, an empty literal, is a line break.
