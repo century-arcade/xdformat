@@ -184,6 +184,13 @@ them:
 
     A1. Sugar ___ ~ CONE ~ CANE
 
+An entry that runs through an unfilled cell ('?' in the grid) is not fully
+known.  Its answer has a '?' in place of each such cell, so the answer keeps
+the entry's length and shows which letters are known:
+
+    A1. Big name in bricks? ~ L?GO
+    A5. Toy on a string ~ ????
+
 #### Clue Metadata
 
 If you need to attach metadata to a clue, on a new line after the clue replace the ". "
@@ -409,6 +416,7 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * [BREAKING] `.` can now be used as a block
 * [BREAKING] `?` is reserved in the grid for an unfilled cell, and can no
   longer be a rebus key
+* An answer has a '?' for each unfilled cell in its entry.
 * [BREAKING] The 'Cluegroup' field is dropped
 * Section headings are recommended, and required to use a design section; the
   implicit section order is still valid
