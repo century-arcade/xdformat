@@ -90,11 +90,11 @@ def test_blank_lines_do_not_change_sections():
     assert xd.grid == ["AB", "CD"]
 
 
-def test_other_sections_skipped():
+def test_other_sections_ignored():
     headed = textwrap.dedent("""\
         ## Metadata
         Title: T
-        ## Editors Notes
+        ## Notes
         Not part of any section the spec defines.
         ## Grid
         AB
@@ -108,35 +108,6 @@ def test_other_sections_skipped():
     assert xd.grid == ["AB"]
     assert xd.clues == [(("A", 1), "x", "AB")]
     assert xd.notes == ""
-
-
-def test_notes_section_read():
-    headed = textwrap.dedent("""\
-        ## Metadata
-        Title: T
-        ## Notes
-        A note.
-        A second line.
-        ## Grid
-        AB
-        ## Clues
-        A1. x ~ AB
-    """)
-    xd = parse(headed)
-    assert xd.notes == "A note.\nA second line.\n"
-    assert xd.grid == ["AB"]
-    assert xd.clues == [(("A", 1), "x", "AB")]
-
-
-def test_notes_heading_case_insensitive():
-    xd = parse("## Metadata\nTitle: T\n## Grid\nAB\n## Clues\nA1. x ~ AB\n## NOTES\nA note.\n")
-    assert xd.notes == "A note.\n"
-
-
-def test_headed_notes_match_headingless():
-    headed = "## Metadata\nTitle: T\nAuthor: A\n## Grid\nABC\nD#E\nFGH\n## Clues\nA1. First ~ ABC\nA3. Second ~ FGH\nD1. Down one ~ ADF\nD2. Down two ~ CEH\n## Notes\nA note.\n"
-    assert parse(headed).notes == parse(HEADINGLESS).notes
-    assert parse(headed).to_unicode() == parse(HEADINGLESS).to_unicode()
 
 
 def test_lines_before_first_heading_ignored():
@@ -153,8 +124,7 @@ def test_grid_rows_starting_with_hashes_are_not_headings():
 
 
 def test_unknown_heading_alone_keeps_implicit_parsing():
-    # Only a metadata/grid/clues heading switches a file to explicit mode;
-    # a '## Notes' line inside a headingless file's notes does not.
+    # Only a metadata/grid/clues heading switches a file to explicit mode.
     text = HEADINGLESS.replace("A note.", "## Notes\nA note.")
     xd = parse(text)
     assert sections(xd) == sections(parse(HEADINGLESS))

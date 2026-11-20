@@ -37,12 +37,9 @@ EOL = '\n'
 SECTION_SEP = EOL + EOL
 
 # Spec 2.0: a '## [Section Name]' line declares the lines after it as that
-# section.  Names are case-insensitive; sections other than these are skipped.
+# section.  Names are case-insensitive; sections other than these are ignored.
 SECTION_HEADING_RE = re.compile(r'^\s*##\s+(.+?)\s*$')
-SECTION_NUMBERS = {'metadata': 1, 'grid': 2, 'clues': 3, 'notes': 4}
-# Only these switch a file to explicit sections.  A headingless file may have
-# a '## Notes' line inside its notes, and must still be read in fixed order.
-REQUIRED_SECTIONS = (1, 2, 3)
+SECTION_NUMBERS = {'metadata': 1, 'grid': 2, 'clues': 3}
 
 # Spec 3.0: clue metadata, on the line after its clue: 'A1 ^Refs: A2 D4'.
 # The reference has no '.', which is what tells it from a clue line.
@@ -248,8 +245,8 @@ class xdfile:
 
     @staticmethod
     def _heading_section(line):
-        """Section number (1-4) for a '## Metadata/Grid/Clues/Notes' heading
-        line, 0 for any other heading, None if the line isn't a heading."""
+        """Section number (1-3) for a '## Metadata/Grid/Clues' heading line,
+        0 for any other heading, None if the line isn't a heading."""
         m = SECTION_HEADING_RE.match(line)
         if not m:
             return None
@@ -282,9 +279,9 @@ class xdfile:
     def _explicit_sections(cls, lines):
         """Yield (section, line) for a file with '## Section' headings.
         Order in the file is unimportant, so metadata is yielded first, then
-        grid, then clues, then notes.  Lines under other headings, and lines
-        before the first heading, are skipped."""
-        by_section = {1: [], 2: [], 3: [], 4: []}
+        grid, then clues.  Lines under other headings, and lines before the
+        first heading, are ignored."""
+        by_section = {1: [], 2: [], 3: []}
         section = 0
         for line in lines:
             heading = cls._heading_section(line)
@@ -294,13 +291,13 @@ class xdfile:
             line = line.strip()
             if line and section:
                 by_section[section].append(line)
-        for section in (1, 2, 3, 4):
+        for section in (1, 2, 3):
             for line in by_section[section]:
                 yield section, line
 
     def parse_xd(self, xd_contents):
         lines = xd_contents.splitlines()
-        if any(self._heading_section(line) in REQUIRED_SECTIONS for line in lines):
+        if any(self._heading_section(line) for line in lines):
             sectioned = self._explicit_sections(lines)
         else:
             sectioned = self._implicit_sections(lines)

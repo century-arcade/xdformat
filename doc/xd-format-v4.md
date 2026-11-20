@@ -56,16 +56,10 @@ The .xd format is a simple UTF-8 text file, and can often be 7-bit ASCII clean.
 
 A file is divided into sections.  A section should start with a
 `## [Section Name]` heading, which declares the lines after it as that section.
-A heading is a whole line that begins with '## ', optionally after leading
-whitespace; '## ' later in a line is not a heading.  Headings are
-case-insensitive.  Order is unimportant.
-
-The sections this specification defines are `"metadata"`, `"grid"`, `"clues"`,
-`"design"` and `"notes"`.  A file may hold sections with other headings.  A
-reader may skip a section it does not know, and what such a section contains
-is up to whoever defined it.  A tool that rewrites a file should carry
-unknown sections through unchanged.  [They may hold another tool's data, such
-as an editor's notes or a message shown after the solve.]
+Headings are case-insensitive, and a section whose heading is not `"metadata"`,
+`"grid"`, `"clues"` or `"design"` is ignored.  Order is unimportant.  [A file
+may hold sections with other headings, such as `## Notes` or
+`## Introduction`.]
 
 ### Implicit sections
 
@@ -307,28 +301,13 @@ The CSS-like parser should be able to handle:
 Explicit colors and light/dark variants are under discussion in
 [#5](https://github.com/century-arcade/xdformat/issues/5).
 
-### Notes (optional section)
-
-A `## Notes` section holds free text about the puzzle.  It is the same
-section as the notes that follow the clues in a file without headings, and a
-file converted from one form to the other keeps its notes there.
-
-    ## Notes
-
-    The circled letters, read in order, spell a bonus answer.
-
-Notes may carry inline markup; the syntax is given in
-[xdown Formatting](#xdown-formatting) below.  A line break in the notes is a
-line break.
-
 ### xdown Formatting
 
-Clue bodies, metadata fields and notes may contain inline markup, known as xdown.
+Clue bodies and metadata fields may contain inline markup, known as xdown.
 A markup span is an opening '{', a type character, the content, the same type
 character again, and a closing '}'.
 
-Markup is available only in clue bodies, the values of metadata fields, and
-notes.
+Markup is available only in clue bodies and the values of metadata fields.
 Metadata field keys, answers, and the grid are plain text; markup syntax
 appearing in them is not interpreted.  [The markup represents the rendered
 form, as it appeared in the original medium.]
@@ -439,9 +418,6 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * Metadata field keys and clue metadata keys are case-insensitive; writers
   should emit titlecase.
 * Metadata fields can now be xdown formatted
-* A file with headings keeps its notes in a `## Notes` section, which can be
-  xdown formatted.  A section with any other heading may be skipped by a
-  reader, and should be kept by a tool that rewrites the file.
 * A rebus key may be assigned multiple values, declaring a Schrödinger cell.
 * The `## Design` section (adopted from Puzzmo's extension, without its
   `<style>` wrapper) replaces the 'Special' field and lowercase special cells.
