@@ -301,10 +301,9 @@ The CSS-like parser should be able to handle:
 
 #### Design variants
 
-A puzzle can look different in a particular situation, most often once it has
-been solved: an image appears over the grid, or replaces the one that was
-there.  A design variant describes that.  It is a section of its own, headed
-`## Design:` and the variant's name:
+A design can change with the state of the reader.  A variant is a section
+headed `## Design:` and one or more modes, with style definitions and no
+design grid:
 
     ## Design
 
@@ -314,37 +313,35 @@ there.  A design variant describes that.  It is a section of its own, headed
     .....
     ....V
 
+    ## Design: dark
+
+    H { background-image: url('https://example.com/heart-dark.png') }
+
     ## Design: solved
 
-    H { background-image: url('https://example.com/open-heart.png') }
     V { background: shaded }
 
-A variant holds style definitions and no design grid.  Its cells are the ones
-the Design section's grid marks.  It starts from the Design section and
+Defined modes:
+
+* `dark` -- the reader is showing a dark theme
+* `solved` -- the puzzle has been solved
+
+A variant applies when all of its modes hold.  A reader starts from the
+Design section and applies `dark`, then `solved`, then `dark solved`.  Each
 overrides only the properties it names, the same merge as re-opening a
-character.  Here the image on H is replaced and keeps its size, and V, which
-had no styling, becomes shaded.
+character.
 
-One variant is defined:
+A variant cannot mark new cells.  A character may be in the design grid with
+no definition in the Design section, as V is above.
 
-* `solved` -- the design once the puzzle has been solved
+`none` turns a property off: `background-image: none`.
 
-A variant cannot mark new cells, so every character it styles is in the
-design grid.  A character may be in the grid with no definition in the Design
-section, as V is above; it is then unstyled until a variant styles it.
+A reader skips a variant with a mode it does not know.  [An older reader then
+never shows the solver something meant for after the solve.]
 
-A property is turned off with the value `none`: `background-image: none`
-removes an image that the Design section put there.
+Modes are case-insensitive and their order in a heading does not matter.
 
-A reader that does not know a variant skips its section.  [So a reader that
-predates a variant never applies it.  For `solved`, that means it never shows
-the solver something meant for after the solve.]  How a reader moves from one
-design to the other, at once or with a transition, is up to the reader.
-
-Variant names are case-insensitive, and a file has at most one section for
-each.  A variant needs a Design section to start from.
-
-Explicit colors and light/dark variants are under discussion in
+Explicit colors are under discussion in
 [#5](https://github.com/century-arcade/xdformat/issues/5).
 
 ### xdown Formatting
@@ -469,9 +466,8 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
   `<style>` wrapper) replaces the 'Special' field and lowercase special cells.
 * It is now possible to represent barred-grid Crosswords
 * It is possible to represent background images in the grid
-* A `## Design: solved` section gives the design once the puzzle is solved,
-  as overrides to the Design section.  Other design variants can be added the
-  same way.
+* `## Design: dark` and `## Design: solved` sections override the Design
+  section in dark mode and once the puzzle is solved.
 * A clue line holds a ' ~ '-separated list of answers, usually of size one;
   a Schrödinger slot lists all valid fills.  Answers always spell out rebus
   expansions.  An answer is a single word; text following it is ignored.
