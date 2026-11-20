@@ -99,7 +99,7 @@ def test_other_sections_ignored():
         ## Grid
         AB
         ## Design
-        O { background: circle }
+        O { decoration: circle }
         ## Clues
         A1. x ~ AB
     """)
