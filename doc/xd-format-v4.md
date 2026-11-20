@@ -319,6 +319,9 @@ so that adding one never changes the meaning of an existing file.  A '{'
 followed by any other character (a letter, digit, space, and so on) is literal
 text, so most clue bodies need no escaping.
 
+A reader shows the content of a span whose type it does not define, dropping
+the braces, the type characters, and anything from the first '|'.
+
 Seven of them style their content as text:
 
 * `{/italic/}`
@@ -425,6 +428,8 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
   a Schrödinger slot lists all valid fills.  Answers always spell out rebus
   expansions.  An answer is a single word; text following it is ignored.
 * Markup adds subscript, superscript, and small caps, and formally nests.
+* A reader shows the content of a span whose type it does not know, so a
+  later version can add span types.
 * Links and images take named attributes (`href`, `src`, `display`) rather
   than a positional list of parts.
 * A `{\literal\}` span passes its content through untouched; it replaces
