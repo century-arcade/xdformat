@@ -487,8 +487,7 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
   `<style>` wrapper) replaces the 'Special' field and lowercase special cells.
 * A design cell may carry a background color and a letter color, as published.
   A circle is `decoration: circle`, so that a cell can be circled and colored.
-* A design cell may carry a bar on its top or left edge.  Bars are drawn
-  only; barred grids are not yet representable.
+* A design cell may carry a bar on its top or left edge.
 * It is possible to represent background images in the grid
 * `## Design: dark` and `## Design: solved` sections override the Design
   section in dark mode and once the puzzle is solved.
