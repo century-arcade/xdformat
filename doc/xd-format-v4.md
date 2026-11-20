@@ -252,11 +252,11 @@ A cell may be circled and colored together:
     R { decoration: circle; background: #FF69B4 }
     W { background: #000000; color: #FFFFFF }
 
-The syntax is borrowed from CSS, but this is not CSS.  There is no cascade,
-no inheritance between cells, and no selector other than a single style
-character.  The properties above are the whole list.  A reader ignores a
-property it does not know, and a value it does not understand for a property
-it does, and keeps the rest of the definition.
+The syntax is borrowed from CSS, but this is not CSS.  There is no cascade
+beyond the variants below, no inheritance between cells, and no selector
+other than a single style character.  The properties above are the whole
+list.  A reader ignores a property it does not know, and a value it does not
+understand for a property it does, and keeps the rest of the definition.
 
 An image is given as a CSS `url()` with a quoted argument.  The url is either
 a data URI, which keeps the image in the file, or a reference to an image
@@ -291,6 +291,9 @@ size is only meaningful as a count of them.]
 A cell may carry an image and a background together; the image is drawn over
 the background.
 
+An image may be animated, as a GIF or an APNG is.  A reader that can play it
+should, and should not show a single frame in its place.
+
 The CSS-like parser should be able to handle:
 
 * Whitespace around a selector, key or value being trimmed -- but whitespace
@@ -320,8 +323,47 @@ The CSS-like parser should be able to handle:
 * Rejecting a comma inside a rule body, where it is never a separator:
   `background-size: 2 2`, never `background-size: 2, 2`
 
-Dark-mode variants, as a separate section that overrides this one, are under
-discussion in [#5](https://github.com/century-arcade/xdformat/issues/5).
+#### Design variants
+
+A design can change with the state of the reader.  A variant is a section
+headed `## Design:` and one or more modes, with style definitions and no
+design grid:
+
+    ## Design
+
+    R { background: #FF69B4 }
+
+    .....
+    .RRR.
+    ..C..
+
+    ## Design: dark
+
+    R { background: #C71585 }
+
+    ## Design: solved
+
+    C { decoration: circle }
+
+Defined modes:
+
+* `dark` -- the reader is showing a dark theme
+* `solved` -- the puzzle has been solved
+
+A variant applies when all of its modes hold.  A reader starts from the
+Design section and applies `dark`, then `solved`, then `dark solved`.  Each
+overrides only the properties it names, the same merge as re-opening a
+character.
+
+A variant cannot mark new cells.  A character may be in the design grid with
+no definition in the Design section, as C is above.
+
+`none` turns a property off: `background: none`.
+
+A reader skips a variant with a mode it does not know.  [An older reader then
+never shows the solver something meant for after the solve.]
+
+Modes are case-insensitive and their order in a heading does not matter.
 
 ### xdown Formatting
 
@@ -448,6 +490,8 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * A design cell may carry a bar on its top or left edge.  Bars are drawn
   only; barred grids are not yet representable.
 * It is possible to represent background images in the grid
+* `## Design: dark` and `## Design: solved` sections override the Design
+  section in dark mode and once the puzzle is solved.
 * A clue line holds a ' ~ '-separated list of answers, usually of size one;
   a Schrödinger slot lists all valid fills.  Answers always spell out rebus
   expansions.  An answer is a single word; text following it is ignored.
