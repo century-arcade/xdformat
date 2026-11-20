@@ -57,7 +57,9 @@ The .xd format is a simple UTF-8 text file, and can often be 7-bit ASCII clean.
 A file is divided into sections.  A section should start with a
 `## [Section Name]` heading, which declares the lines after it as that section.
 Headings are case-insensitive, and a section whose heading is not `"metadata"`,
-`"grid"`, `"clues"` or `"design"` is ignored.  Order is unimportant.
+`"grid"`, `"clues"` or `"design"` is ignored.  Order is unimportant.  [A file
+may hold sections with other headings, such as `## Notes` or
+`## Introduction`.]
 
 ### Implicit sections
 
