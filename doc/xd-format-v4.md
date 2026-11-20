@@ -191,9 +191,6 @@ the entry's length and shows which letters are known:
     A1. Big name in bricks? ~ L?GO
     A5. Toy on a string ~ ????
 
-A tool that compares answers with the grid should find each '?' at the
-position of its cell.
-
 #### Clue Metadata
 
 If you need to attach metadata to a clue, on a new line after the clue replace the ". "
