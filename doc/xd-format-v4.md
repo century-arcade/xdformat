@@ -319,13 +319,8 @@ so that adding one never changes the meaning of an existing file.  A '{'
 followed by any other character (a letter, digit, space, and so on) is literal
 text, so most clue bodies need no escaping.
 
-A reader that meets a span whose type character it does not define shows the
-span's content and drops the rest: the braces, the type characters, and
-anything from the first '|' outside a nested span, which a later version may
-use for attributes.  Markup inside the content is read as usual.  [A file
-written for a later version then still reads sensibly.  A span this version
-doesn't know falls back to its text, the way an image falls back to its alt
-text.]
+A reader shows the content of a span whose type it does not define, dropping
+the braces, the type characters, and anything from the first '|'.
 
 Seven of them style their content as text:
 
