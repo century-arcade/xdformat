@@ -168,9 +168,10 @@ own in a row or a column has no entry in that direction, like a cell between
 two blocks: above, the O of OBOE has no Across entry and the W of WEND has no
 Down entry.
 
-Every cell has a character, and '.' is used for any cell without a bar, a
-block included.  [As in a design grid, '.' here says nothing about the cell.
-It is not the '.' that is a block in the puzzle grid.]
+Every cell has a character.  A block should be written as it is in the puzzle
+grid, which makes the section easier to read beside it.  A reader does not
+check this: '#' means the same as '.' here, and a reader takes the blocks
+from the puzzle grid and only the bars from this one.
 
 A bar on the outer edge of the grid, or on an edge a cell shares with a
 block, changes nothing.  A reader ignores it, and a tool that writes .xd
@@ -181,9 +182,16 @@ entry; a reader works them out from the grid.  Without the bars it would find
 different entries and number them differently, with nothing to show that it
 had.]
 
-A bar in this section is always drawn.  A line that is only drawn, such as a
-mark where one word of an answer ends and the next begins, goes in the Design
-section as `bar-top` or `bar-left`, and never ends an entry.
+A reader draws every bar in this section.  The Design section does not
+repeat them: `bar-top` and `bar-left` there add lines that are only drawn,
+such as a mark where one word of an answer ends and the next begins, and they
+never end an entry.  [A reader that skips the Design section still draws a
+barred grid correctly, and the two sections cannot disagree about where the
+entries are.]
+
+[A puzzle whose solver has to work out where the bars go, a carte blanche, is
+not covered.  Its bars would be given here, and something else would have to
+say that they start hidden.]
 
 ### Clues
 
@@ -281,6 +289,11 @@ style character and each unstyled cell with '.':
 No delimiter is needed between the definitions and the design grid: the
 design grid starts at the first non-blank line after the last definition's
 closing '}'.
+
+A block with no style should be written '#' in the design grid, as in the
+puzzle grid, which makes the design easier to read beside it.  A reader does
+not check this: '#' is an unstyled cell, like '.', and blocks are taken only
+from the puzzle grid.
 
 Style characters are case-sensitive: a design may use both 'A'-'Z' and
 'a'-'z'.  [An illustrated puzzle can need more than 26 distinct styles.]
