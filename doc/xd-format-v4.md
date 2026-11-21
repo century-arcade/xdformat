@@ -143,10 +143,10 @@ dimensions as the puzzle grid, with one character per cell:
 
     ## Grid
 
-    ONAT
-    NOTO
-    ISUP
-    SOPI
+    AHIS
+    MENO
+    ATUP
+    DOHI
 
     ## Bars
 
@@ -155,9 +155,20 @@ dimensions as the puzzle grid, with one character per cell:
     --+-
     ..|.
 
+    ## Clues
+
+    A1. Sound of relief ~ AH
+    A3. Exists ~ IS
+    [...]
+
+    D1. Before noon ~ AM
+    D2. That guy ~ HE
+    [...]
+
 An entry ends at a bar as it does at a block or at the edge of the grid, and
 cells are numbered with the bars in place.  Above, the bars cut the grid into
-quarters: the first row reads ON and AT, and the first column ON and IS.  [Each bar is the left or top edge of exactly
+quarters, so the first row holds two entries, AH and IS, and the first column
+holds AM and AT.  [Each bar is the left or top edge of exactly
 one cell, so a grid's bars can be written only one way.]
 
 A block may be written '#', as in the puzzle grid, and is read as '.'.  A bar
