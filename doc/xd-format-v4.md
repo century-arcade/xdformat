@@ -143,19 +143,21 @@ dimensions as the puzzle grid, with one character per cell:
 
     ## Grid
 
-    CATS
-    OBOE
-    WEND
+    ONAT
+    NOTO
+    ISUP
+    SOPI
 
     ## Bars
 
-    ....
-    .|..
-    -...
+    ..|.
+    ..|.
+    --+-
+    ..|.
 
 An entry ends at a bar as it does at a block or at the edge of the grid, and
-cells are numbered with the bars in place.  Above, the second row reads BOE
-and the first column reads CO.  [Each bar is the left or top edge of exactly
+cells are numbered with the bars in place.  Above, the bars cut the grid into
+quarters: the first row reads ON and AT, and the first column ON and IS.  [Each bar is the left or top edge of exactly
 one cell, so a grid's bars can be written only one way.]
 
 A block may be written '#', as in the puzzle grid, and is read as '.'.  A bar
