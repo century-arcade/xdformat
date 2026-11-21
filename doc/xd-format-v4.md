@@ -57,7 +57,7 @@ The .xd format is a simple UTF-8 text file, and can often be 7-bit ASCII clean.
 A file is divided into sections.  A section should start with a
 `## [Section Name]` heading, which declares the lines after it as that section.
 Headings are case-insensitive, and a section whose heading is not `"metadata"`,
-`"grid"`, `"clues"` or `"design"` is ignored.  Order is unimportant.
+`"grid"`, `"bars"`, `"clues"` or `"design"` is ignored.  Order is unimportant.
 
 ### Implicit sections
 
@@ -82,8 +82,8 @@ following.  The full example above can be written this way:
     A6. Progenitor. ~ ADAM
     [...]
 
-A design section has no place in that order, so a file using one needs
-headings.  [Nearly every .xd file written so far is headingless, so this form
+A design section or a bars section has no place in that order, so a file
+using one needs headings.  [Nearly every .xd file written so far is headingless, so this form
 stays supported; new files should use headings.]
 
 ### Metadata
@@ -130,6 +130,60 @@ The same key may be assigned more than one value; such a cell accepts any one
 of its values (a Schrödinger cell):
 
     Rebus: 1=O 1=A
+
+### Bars (optional section)
+
+A `## Bars` section holds the bars of a barred grid: the heavy lines between
+cells that end an entry where a block would.  It is a grid of the same
+dimensions as the puzzle grid, with one character per cell:
+
+* '.' -- the cell has no bar
+* '|' -- a bar on the cell's left edge
+* '-' -- a bar on the cell's top edge
+* '+' -- a bar on both
+
+A bar between two cells is the left edge of the cell to its right, or the top
+edge of the cell below it, so each bar is written in one place.  [That is why
+there are no characters for the right and bottom edges: with them, the same
+grid could be written two ways.]
+
+    ## Grid
+
+    CATS
+    OBOE
+    WEND
+
+    ## Bars
+
+    ....
+    .|..
+    -...
+
+Here the second row reads BOE, starting at its bar, and the first column
+reads CO, ending at the bar above the W.
+
+An entry ends at a bar as it does at a block or at the edge of the grid, and
+cells are numbered with the bars in place.  A cell that the bars leave on its
+own in a row or a column has no entry in that direction, like a cell between
+two blocks: above, the O of OBOE has no Across entry and the W of WEND has no
+Down entry.
+
+Every cell has a character, and '.' is used for any cell without a bar, a
+block included.  [As in a design grid, '.' here says nothing about the cell.
+It is not the '.' that is a block in the puzzle grid.]
+
+A bar on the outer edge of the grid, or on an edge a cell shares with a
+block, changes nothing.  A reader ignores it, and a tool that writes .xd
+should leave it out.
+
+A reader cannot skip this section.  [.xd does not list the cells of each
+entry; a reader works them out from the grid.  Without the bars it would find
+different entries and number them differently, with nothing to show that it
+had.]
+
+A bar in this section is always drawn.  A line that is only drawn, such as a
+mark where one word of an answer ends and the next begins, goes in the Design
+section as `bar-top` or `bar-left`, and never ends an entry.
 
 ### Clues
 
@@ -430,7 +484,10 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * A rebus key may be assigned multiple values, declaring a Schrödinger cell.
 * The `## Design` section (adopted from Puzzmo's extension, without its
   `<style>` wrapper) replaces the 'Special' field and lowercase special cells.
-* It is now possible to represent barred-grid Crosswords
+* A `## Bars` section holds the bars of a barred grid, and a reader has to
+  read it to find the entries.  `bar-top` and `bar-left` in the Design section
+  are only drawn.  [Files that kept structural bars in the Design section,
+  with `Form: barred`, need them moved.]
 * It is possible to represent background images in the grid
 * A clue line holds a ' ~ '-separated list of answers, usually of size one;
   a Schrödinger slot lists all valid fills.  Answers always spell out rebus
