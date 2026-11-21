@@ -133,19 +133,13 @@ of its values (a Schrödinger cell):
 
 ### Bars (optional section)
 
-A `## Bars` section holds the bars of a barred grid: the heavy lines between
-cells that end an entry where a block would.  It is a grid of the same
+A `## Bars` section holds the bars of a barred grid.  It is a grid of the same
 dimensions as the puzzle grid, with one character per cell:
 
-* '.' -- the cell has no bar
+* '.' -- no bar
 * '|' -- a bar on the cell's left edge
 * '-' -- a bar on the cell's top edge
-* '+' -- a bar on both
-
-A bar between two cells is the left edge of the cell to its right, or the top
-edge of the cell below it, so each bar is written in one place.  [That is why
-there are no characters for the right and bottom edges: with them, the same
-grid could be written two ways.]
+* '+' -- both
 
     ## Grid
 
@@ -159,39 +153,18 @@ grid could be written two ways.]
     .|..
     -...
 
-Here the second row reads BOE, starting at its bar, and the first column
-reads CO, ending at the bar above the W.
-
 An entry ends at a bar as it does at a block or at the edge of the grid, and
-cells are numbered with the bars in place.  A cell that the bars leave on its
-own in a row or a column has no entry in that direction, like a cell between
-two blocks: above, the O of OBOE has no Across entry and the W of WEND has no
-Down entry.
+cells are numbered with the bars in place.  Above, the second row reads BOE
+and the first column reads CO.  [Each bar is the left or top edge of exactly
+one cell, so a grid's bars can be written only one way.]
 
-Every cell has a character.  A block should be written as it is in the puzzle
-grid, which makes the section easier to read beside it.  A reader does not
-check this: '#' means the same as '.' here, and a reader takes the blocks
-from the puzzle grid and only the bars from this one.
+A block may be written '#', as in the puzzle grid, and is read as '.'.  A bar
+on the outer edge of the grid, or between a cell and a block, changes nothing
+and is ignored.
 
-A bar on the outer edge of the grid, or on an edge a cell shares with a
-block, changes nothing.  A reader ignores it, and a tool that writes .xd
-should leave it out.
-
-A reader cannot skip this section.  [.xd does not list the cells of each
-entry; a reader works them out from the grid.  Without the bars it would find
-different entries and number them differently, with nothing to show that it
-had.]
-
-A reader draws every bar in this section.  The Design section does not
-repeat them: `bar-top` and `bar-left` there add lines that are only drawn,
-such as a mark where one word of an answer ends and the next begins, and they
-never end an entry.  [A reader that skips the Design section still draws a
-barred grid correctly, and the two sections cannot disagree about where the
-entries are.]
-
-[A puzzle whose solver has to work out where the bars go, a carte blanche, is
-not covered.  Its bars would be given here, and something else would have to
-say that they start hidden.]
+A reader cannot skip this section: without the bars it would find the wrong
+entries.  `bar-top` and `bar-left` in the Design section are only drawn, and
+never end an entry.
 
 ### Clues
 
@@ -289,11 +262,6 @@ style character and each unstyled cell with '.':
 No delimiter is needed between the definitions and the design grid: the
 design grid starts at the first non-blank line after the last definition's
 closing '}'.
-
-A block with no style should be written '#' in the design grid, as in the
-puzzle grid, which makes the design easier to read beside it.  A reader does
-not check this: '#' is an unstyled cell, like '.', and blocks are taken only
-from the puzzle grid.
 
 Style characters are case-sensitive: a design may use both 'A'-'Z' and
 'a'-'z'.  [An illustrated puzzle can need more than 26 distinct styles.]
@@ -497,10 +465,8 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * A rebus key may be assigned multiple values, declaring a Schrödinger cell.
 * The `## Design` section (adopted from Puzzmo's extension, without its
   `<style>` wrapper) replaces the 'Special' field and lowercase special cells.
-* A `## Bars` section holds the bars of a barred grid, and a reader has to
-  read it to find the entries.  `bar-top` and `bar-left` in the Design section
-  are only drawn.  [Files that kept structural bars in the Design section,
-  with `Form: barred`, need them moved.]
+* A `## Bars` section holds the bars of a barred grid.  Bars in the Design
+  section are only drawn.
 * It is possible to represent background images in the grid
 * A clue line holds a ' ~ '-separated list of answers, usually of size one;
   a Schrödinger slot lists all valid fills.  Answers always spell out rebus
