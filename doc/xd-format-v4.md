@@ -176,8 +176,8 @@ on the outer edge of the grid, or between a cell and a block, changes nothing
 and is ignored.
 
 A reader cannot skip this section: without the bars it would find the wrong
-entries.  `bar-top` and `bar-left` in the Design section are only drawn, and
-never end an entry.
+entries.  `border-top` and `border-left` in the Design section are only drawn,
+and never end an entry.
 
 ### Clues
 
@@ -286,8 +286,8 @@ Defined properties:
 * `background-image: url('...')` -- an image drawn in the cell
 * `background-size: N M` -- the image spans N cells to the right and M cells
   downward; defaults to `1 1`
-* `bar-top: true` -- a bar on the top edge of the cell (barred grids)
-* `bar-left: true` -- a bar on the left edge of the cell
+* `border-top: true` -- a line drawn on the top edge of the cell
+* `border-left: true` -- a line drawn on the left edge of the cell
 
 An image is given as a CSS `url()` with a quoted argument.  The url is either
 a data URI, which keeps the image in the file, or a reference to an image
@@ -332,7 +332,7 @@ The CSS-like parser should be able to handle:
     ```css
     A {
       background: circle;
-      bar-top: true;
+      border-top: true;
     }
     ```
 
@@ -340,11 +340,11 @@ The CSS-like parser should be able to handle:
 
     ```css
     A { background: circle }
-    A { bar-top: true }
+    A { border-top: true }
     ```
 
 * Opening many characters at once with a comma: `A, B { background: circle }`
-* Separating many properties via semi colons: `A { background: circle; bar-top: true }`
+* Separating many properties via semi colons: `A { background: circle; border-top: true }`
 * An optional trailing semi colon after the last property: `A { background: circle; }`
 * Quoted values inside a rule body, within which none of `}`, `:`, `;` or
   `,` delimits
@@ -478,8 +478,10 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * A rebus key may be assigned multiple values, declaring a Schrödinger cell.
 * The `## Design` section (adopted from Puzzmo's extension, without its
   `<style>` wrapper) replaces the 'Special' field and lowercase special cells.
-* A `## Bars` section holds the bars of a barred grid.  Bars in the Design
-  section are only drawn.
+* A `## Bars` section holds the bars of a barred grid.
+* [BREAKING] The Design properties `bar-top` and `bar-left` are renamed
+  `border-top` and `border-left`.  They are only drawn; a bar that ends an
+  entry goes in the Bars section.
 * It is possible to represent background images in the grid
 * A clue line holds a ' ~ '-separated list of answers, usually of size one;
   a Schrödinger slot lists all valid fills.  Answers always spell out rebus
