@@ -35,6 +35,7 @@ This repo holds the format specification and the reference tools for parsing .xd
 - [doc/xd-format.md](doc/xd-format.md) -- the format specification (v3.0)
 - [doc/xd-format-v4.md](doc/xd-format-v4.md) -- the v4.0 draft specification, still in discussion
 - [doc/rebus-conventions.md](doc/rebus-conventions.md) -- rebus/quantum/Schrödinger conventions observed in the corpus (extensions to the spec, not yet formalized)
+- [doc/format-comparison.md](doc/format-comparison.md) -- how JPZ, ipuz and Across Lite .puz map to .xd v4, field by field: what converts cleanly, what loses something, and what is out of scope or waiting on an open issue
 - [doc/character-encoding.md](doc/character-encoding.md) -- character-encoding oddities inherited from source formats, and how the converters clean them up
 
 ## The xdformat Python package
