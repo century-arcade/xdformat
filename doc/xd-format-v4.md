@@ -57,7 +57,8 @@ The .xd format is a simple UTF-8 text file, and can often be 7-bit ASCII clean.
 A file is divided into sections.  A section should start with a
 `## [Section Name]` heading, which declares the lines after it as that section.
 Headings are case-insensitive, and a section whose heading is not `"metadata"`,
-`"grid"`, `"clues"` or `"design"` is ignored.  Order is unimportant.
+`"grid"`, `"clues"`, `"design"` or `"media"` is ignored.  Order is
+unimportant, except that a media section is the last section in the file.
 
 ### Implicit sections
 
@@ -236,6 +237,8 @@ Defined properties:
 * `background: circle` -- a circle in the cell
 * `background: shaded` -- the cell is shaded; the renderer chooses the color
 * `background-image: url('...')` -- an image drawn in the cell
+* `background-image: ref(key)` -- the same, with the image taken from the
+  [Media](#media-optional-section) section
 * `background-size: N M` -- the image spans N cells to the right and M cells
   downward; defaults to `1 1`
 * `bar-top: true` -- a bar on the top edge of the cell (barred grids)
@@ -257,6 +260,11 @@ and ',' inside either form of url are not read as delimiters.
 Prefer a data URI.  An .xd file aims to be a single self-contained document,
 and an external image makes the puzzle depend on a host that may not answer
 for as long as the file exists.
+
+An image may instead be named by its key in the Media section, which keeps a
+long data URI out of the style definitions.  The key is not quoted:
+
+    A { background-image: ref(petal) }
 
 An image covering more than one cell is marked at its top-left cell only,
 with 'background-size' giving its size in cells, width first.  The cells it
@@ -347,12 +355,13 @@ Text spans nest, and a renderer applies every enclosing style:
 
     A15. Captain in {/{*Moby-Dick*}/} ~ AHAB
 
-Two of them point at something outside the clue:
+Three of them point at something outside the clue:
 
 * `{@link@}` - text with somewhere to go
 * `{!image!}` - an image with its alt text
+* `{%clip%}` - a sound or a video, with the text to show in its place
 
-These two take attributes as well as content: the content, then a '|', then a
+These three take attributes as well as content: the content, then a '|', then a
 list of `key: value` pairs separated by ';', written the same way as a rule
 body in the [Design](#design-optional-section) section.  A value containing
 ';' must be quoted, as a data URI does:
@@ -377,6 +386,22 @@ optional:
 in the run of text, and `block` renders it on its own line:
 
     A17. Pictured: {!A sperm whale | src: https://example.com/whale.png; display: block!} ~ AHAB
+
+A clip is a sound or a video.  Its content is the text a reader shows when it
+cannot play the clip, and may be empty.  `type` is required, and is `audio`
+or `video`.  [A link to a clip often doesn't show which it is.]
+
+    A18. Name this tune: {%Listen | src: https://example.com/tune.mp3; type: audio%} ~ YESTERDAY
+
+An image or a clip may take `ref` in place of `src`.  `ref` names a key in
+the [Media](#media-optional-section) section, where the URI is given.  A span
+has one or the other, not both:
+
+    A17. Pictured: {!A sperm whale | ref: whale!} ~ AHAB
+    A18. Name this tune: {%Listen | ref: tune; type: audio%} ~ YESTERDAY
+
+[`ref` keeps the clue readable.  A data URI in `src` puts thousands of
+characters in the middle of a clue line.]
 
 <!-- A color is its text, with `light` and `dark` giving the color to render it
 in under a light theme and under a dark theme:
@@ -407,6 +432,38 @@ ordinary text.  Nothing else in a clue body needs escaping, since a bare '~'
 is fine, and a '{' is literal unless a type character follows it.
 
 An empty literal, `{\\}`, is a line break.
+
+### Media (optional section)
+
+A `## Media` section holds the images, sounds and videos a puzzle uses, one
+per line, each a `key: value` pair:
+
+    ## Media
+
+    whale: https://example.com/whale.png
+    tune: data:audio/mpeg;base64,SUQzBAAAAAAA
+    petal: data:image/png;base64,iVBORw0KGgo=
+
+The value is a URI, either a link or a data URI.  It runs to the end of the
+line and is not quoted.  A key is made of letters, digits, '-' and '\_', is
+case-insensitive, and is defined once.  Blank lines are ignored.
+
+An entry is used by naming its key: `ref: whale` on an image or a clip in a
+clue, a metadata field or the notes, and `ref(petal)` for a `background-image`
+in the Design section.  Every `ref` names a key that the section defines.  An
+entry may be used more than once.
+
+When a file has a media section, it is the last section in the file.  [The
+media is the bulk of a file that has any, and none of it is needed to read
+the puzzle.  Kept at the end, it leaves the rest readable, a reader that does
+not show media can stop at the heading, and a tool can cut it off or collect
+it without parsing what comes before.]
+
+The section says where each item is, not what it is: the image or clip that
+refers to an entry says how it is used.  A short link may as well stay in
+`src`; a data URI belongs here.
+
+A media section needs headings, like a design section.
 
 ## CHANGELOG
 
@@ -440,6 +497,10 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
   later version can add span types.
 * Links and images take named attributes (`href`, `src`, `display`) rather
   than a positional list of parts.
+* A `{%clip%}` span carries a sound or a video.
+* A `## Media` section, last in the file, holds a puzzle's images, sounds and
+  videos by key.  An image, a clip or a `background-image` refers to an entry
+  with `ref`, in place of giving the URI where it is used.
 * A `{\literal\}` span passes its content through untouched; it replaces
   backslash escapes, and is how a clue body writes ' ~ '.
 * `{\\}`, an empty literal, is a line break.
