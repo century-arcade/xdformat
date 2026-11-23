@@ -208,16 +208,21 @@ The xd spec does not reserve any keys.
 ### Design (optional section)
 
 A `## Design` section describes per-cell visual attributes: circles, shading,
-bars, and images.  [It replaces the v3 'Special' field, which designated
+colors, bars, and images.  [It replaces the v3 'Special' field, which designated
 lowercase a-z grid cells as "shaded" or "circle"; parsers may still encounter
 the v3 form in older files.]
+
+The section records how the puzzle looked as published.  Everything in it is
+presentation only: it changes nothing about the solution, the entries, the
+numbering or the clues, and a reader who does not wish to draw the puzzle may 
+ignore the whole section.
 
 The section starts with one or more style definitions, each assigning
 CSS-like properties to a single character, followed by a design grid
 of the same dimensions as the puzzle grid, marking each styled cell with its
 style character and each unstyled cell with '.':
 
-    O { background: circle }
+    O { decoration: circle }
     S { background: shaded }
 
     ...O...
@@ -233,13 +238,32 @@ Style characters are case-sensitive: a design may use both 'A'-'Z' and
 
 Defined properties:
 
-* `background: circle` -- a circle in the cell
+* `decoration: circle` -- a circle in the cell
 * `background: shaded` -- the cell is shaded; the renderer chooses the color
+* `background: #RRGGBB` -- the cell has this background color
+* `color: #RRGGBB` -- the cell's letter is drawn in this color
 * `background-image: url('...')` -- an image drawn in the cell
 * `background-size: N M` -- the image spans N cells to the right and M cells
   downward; defaults to `1 1`
-* `bar-top: true` -- a bar on the top edge of the cell (barred grids)
+* `bar-top: true` -- a bar on the top edge of the cell
 * `bar-left: true` -- a bar on the left edge of the cell
+
+A color is a '#' followed by six hexadecimal digits, red, green and blue, in
+either case: `#FF69B4`.  It is the color as published; where the source only
+says that a cell is shaded, use `background: shaded`.  A property holds one
+color.  [Other color forms, such as names, three-digit hex and `rgb()`, are
+not accepted, so that a color has one spelling.]
+
+A cell may be circled and colored together:
+
+    R { decoration: circle; background: #FF69B4 }
+    W { background: #000000; color: #FFFFFF }
+
+The syntax is borrowed from CSS, but this is not CSS.  There is no cascade
+beyond the variants below, no inheritance between cells, and no selector
+other than a single style character.  The properties above are the whole
+list.  A reader ignores a property it does not know, and a value it does not
+understand for a property it does, and keeps the rest of the definition.
 
 An image is given as a CSS `url()` with a quoted argument.  The url is either
 a data URI, which keeps the image in the file, or a reference to an image
@@ -274,6 +298,9 @@ size is only meaningful as a count of them.]
 A cell may carry an image and a background together; the image is drawn over
 the background.
 
+An image may be animated, as a GIF or an APNG is.  A reader that can play it
+should, and should not show a single frame in its place.
+
 The CSS-like parser should be able to handle:
 
 * Whitespace around a selector, key or value being trimmed -- but whitespace
@@ -283,7 +310,7 @@ The CSS-like parser should be able to handle:
 
     ```css
     A {
-      background: circle;
+      decoration: circle;
       bar-top: true;
     }
     ```
@@ -291,20 +318,59 @@ The CSS-like parser should be able to handle:
 * Re-opening a character:
 
     ```css
-    A { background: circle }
+    A { decoration: circle }
     A { bar-top: true }
     ```
 
-* Opening many characters at once with a comma: `A, B { background: circle }`
-* Separating many properties via semi colons: `A { background: circle; bar-top: true }`
-* An optional trailing semi colon after the last property: `A { background: circle; }`
+* Opening many characters at once with a comma: `A, B { decoration: circle }`
+* Separating many properties via semi colons: `A { decoration: circle; bar-top: true }`
+* An optional trailing semi colon after the last property: `A { decoration: circle; }`
 * Quoted values inside a rule body, within which none of `}`, `:`, `;` or
   `,` delimits
 * Rejecting a comma inside a rule body, where it is never a separator:
   `background-size: 2 2`, never `background-size: 2, 2`
 
-Explicit colors and light/dark variants are under discussion in
-[#5](https://github.com/century-arcade/xdformat/issues/5).
+#### Design variants
+
+A design can change with the state of the reader.  A variant is a section
+headed `## Design:` and one or more modes, with style definitions and no
+design grid:
+
+    ## Design
+
+    R { background: #FF69B4 }
+
+    .....
+    .RRR.
+    ..C..
+
+    ## Design: dark
+
+    R { background: #C71585 }
+
+    ## Design: solved
+
+    C { decoration: circle }
+
+Defined modes:
+
+* `dark` -- the reader is showing a dark theme
+* `solved` -- the puzzle has been solved
+
+A variant applies when all of its modes hold.  A reader starts from the
+Design section and applies `dark`, then `solved`, then `dark solved`.  Each
+overrides only the properties it names, the same merge as re-opening a
+character.
+
+A variant cannot mark new cells.  A character may be in the design grid with
+no definition in the Design section, as C is above.
+
+`none` turns a property off: `background: none`.
+
+A reader skips a variant with a mode it does not know.  [An older reader then
+never shows the solver something meant for after the solve.]
+
+Modes are case-insensitive and their order in a heading does not matter.
 
 ### xdown Formatting
 
@@ -430,8 +496,12 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * A rebus key may be assigned multiple values, declaring a Schrödinger cell.
 * The `## Design` section (adopted from Puzzmo's extension, without its
   `<style>` wrapper) replaces the 'Special' field and lowercase special cells.
-* It is now possible to represent barred-grid Crosswords
+* A design cell may carry a background color and a letter color, as published.
+  A circle is `decoration: circle`, so that a cell can be circled and colored.
+* A design cell may carry a bar on its top or left edge.
 * It is possible to represent background images in the grid
+* `## Design: dark` and `## Design: solved` sections override the Design
+  section in dark mode and once the puzzle is solved.
 * A clue line holds a ' ~ '-separated list of answers, usually of size one;
   a Schrödinger slot lists all valid fills.  Answers always spell out rebus
   expansions.  An answer is a single word; text following it is ignored.
