@@ -94,6 +94,11 @@ metadata fields.  Other fields describing the puzzle semantics are given
 below.  Additional fields are allowed but will be ignored.  Multiple fields
 with the same key are not allowed.
 
+Byline is an optional field for the credit exactly as published, when it
+differs from Author and Editor: initials, a pen name, an address, a split
+credit ("Puzzle by John Doe, clues by Mary Jane").  It is free text, like
+Copyright.  Author and Editor still name the people.
+
 Field keys are case-insensitive: `Title:`, `title:`, and `TITLE:` are
 equivalent.
 

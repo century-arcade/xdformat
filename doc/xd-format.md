@@ -110,6 +110,11 @@ Editor, Copyright, and Date are the standard headers in the meta section.  Other
 headers describing the puzzle semantics are given below.  Additional headers are 
 allowed but will be ignored.  Multiple entries with the same key are not allowed.
 
+Byline is an optional header for the credit exactly as published, when it
+differs from Author and Editor: initials, a pen name, an address, a split
+credit ("Puzzle by John Doe, clues by Mary Jane").  It is free text, like
+Copyright.  Author and Editor still name the people.
+
 ### Grid (Section 2)
 
 Optional leading whitespace and trailing whitespace on each line.  Never any
