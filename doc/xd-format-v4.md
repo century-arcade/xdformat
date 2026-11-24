@@ -101,6 +101,34 @@ The value of a metadata field may carry inline markup for italics, links,
 images and more; the syntax is given in [xdown Formatting](#xdown-formatting)
 below.
 
+#### Meta and Meta-Answer
+
+Some puzzles have a meta: a further answer that the solver works out from the
+finished puzzle, as in a contest crossword.  Two optional fields record it:
+
+    Meta: The meta answer is a famous novel.
+    Meta-Answer: Moby-Dick
+
+Meta is the prompt as published.  Meta-Answer is the answer.  Both are free
+text, like Title, and each runs to the end of its line, so an answer may
+contain spaces and punctuation.
+
+Either field may appear without the other.  A Meta with no Meta-Answer is a
+meta whose answer is not recorded.  A Meta-Answer with no Meta is a meta the
+puzzle never states in words, such as a word spelled by its circled letters.
+
+The answer belongs in Meta-Answer and nowhere else in the file.  [Notes and
+other free text may be shown to a solver before the solve.]
+
+[The meta answer usually can't be worked out from the file: no cells may
+spell it at all.  Where circled cells do spell it, it is still written here,
+because the Design section is presentation and a reader may ignore it.]
+
+[These are fields and not a clue line because a clue's answer is a single
+word that names an entry in the grid, and ' ~ ' may repeat to list
+alternatives.  A meta answer is a phrase, often with spaces, and has no
+entry.]
+
 ### Grid
 
 Optional leading whitespace and trailing whitespace on each line.  Never any
@@ -475,6 +503,7 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * Metadata field keys and clue metadata keys are case-insensitive; writers
   should emit titlecase.
 * Metadata fields can now be xdown formatted
+* 'Meta' and 'Meta-Answer' fields record a meta puzzle's prompt and answer.
 * A rebus key may be assigned multiple values, declaring a Schrödinger cell.
 * The `## Design` section (adopted from Puzzmo's extension, without its
   `<style>` wrapper) replaces the 'Special' field and lowercase special cells.
