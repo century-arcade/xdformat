@@ -85,7 +85,7 @@ field names and the detail.
 | Circle | `background: circle` | `shapebg: "circle"` | `background-shape="circle"` | `GEXT` 0x80 |
 | Shading | `background: shaded` | `highlight` | A colour | None |
 | Colour | Not yet ([#5]) | `color`, `colortext`, `colorborder`, `colorbar` | `background-color`, `foreground-color`, and grid-wide colours | None |
-| Bars | `bar-top`, `bar-left` | `barred`, `dotted`, `dashed` on any side | `top-bar`, `left-bar` | None |
+| Bars | `-`, `\|` and `+` in a grid of their own ("Bars") | `barred`, `dotted`, `dashed` on any side | `top-bar`, `left-bar` | None |
 | Image in a cell | `background-image`, `background-size` | `imagebg`, `image`, `slice` | `background-picture` | None |
 | Markup in clues | xdown | A subset of HTML | A subset of HTML | None |
 | Notes | Undefined in a file with headings ([#26], [#4]) | `notes`, `intro` | `instructions`, `description` | `notes` |
@@ -160,8 +160,8 @@ rows are "2 Lossy" because the name is a convention, not part of the spec.
 | `color` (background) | None | 3 Later | [#5].  ipuz allows a hex value or a number meaning "some colour, the same wherever this number is used"; the second has no counterpart in the proposals so far |
 | `colortext` | None | 3 Later | A letter colour is asked for in [#5] |
 | `colorborder`, `colorbar`, `border` | None | 3 Out | |
-| `barred`, top or left | `bar-top`, `bar-left` | 1 Clean | |
-| `barred`, right or bottom | `bar-left` on the cell to the right, `bar-top` on the cell below | 2 Lossy | A bar on the right or bottom edge of the grid has no cell to carry it |
+| `barred`, top or left | `-`, `\|` ("Bars") | 1 Clean | |
+| `barred`, right or bottom | `\|` on the cell to the right, `-` on the cell below | 2 Lossy | A bar on the right or bottom edge of the grid has no cell to carry it |
 | `dotted`, `dashed` | None | 3 Out | |
 | `imagebg` | `background-image` | 1 Clean | ipuz image URLs may be relative to a site or package, so a converter has to resolve or embed them.  The draft says "Prefer a data URI" |
 | `slice` (part of an image per cell) | One image with `background-size` | 2 Lossy | Slices that form a rectangle become one spanned image; other arrangements do not convert ([#25]) |
@@ -282,7 +282,7 @@ below are from the two schemas.
 | JPZ | xd v4 | Category | Notes |
 |---|---|---|---|
 | `cell/@background-shape="circle"` | `background: circle` ("Design") | 1 Clean | `circle` is the only shape in the schema |
-| `cell/@top-bar`, `@left-bar` | `bar-top`, `bar-left` | 1 Clean | The same two edges as xd |
+| `cell/@top-bar`, `@left-bar` | `-`, `\|` ("Bars") | 1 Clean | The same two edges as xd |
 | `grid-look/@bars-in-collocations`, `@collocation-separator-style` | None | 3 Out | Bars that mark word breaks inside an entry, not entry boundaries |
 | `cell/@background-color` | None, or `background: shaded` | 3 Later | [#5].  A grey could be written as `shaded`, losing the colour |
 | `cell/@foreground-color` | None | 3 Later | A letter colour is asked for in [#5] |
@@ -380,7 +380,7 @@ four-letter codes of the extension sections.
 | .puz | xd v4 | Category | Notes |
 |---|---|---|---|
 | `GEXT` bit 0x80, circled | `background: circle` ("Design") | 1 Clean | `puz2xd` still writes the v3 form, a `Special: circle` field and a lower-case letter, which v4 drops ([#30]).  It also loses the circle on a cell that is both circled and a rebus |
-| No shading, colour, bars or images | `background: shaded`, `bar-top`, `bar-left`, `background-image` | 1 Clean | In the other direction.  Publishers use the circle bit for shaded squares, so a circle from a .puz may have been shading in print |
+| No shading, colour, bars or images | `background: shaded`, the Bars section, `background-image` | 1 Clean | In the other direction.  Publishers use the circle bit for shaded squares, so a circle from a .puz may have been shading in print |
 
 ### Clues
 

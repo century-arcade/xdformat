@@ -57,7 +57,7 @@ The .xd format is a simple UTF-8 text file, and can often be 7-bit ASCII clean.
 A file is divided into sections.  A section should start with a
 `## [Section Name]` heading, which declares the lines after it as that section.
 Headings are case-insensitive, and a section whose heading is not `"metadata"`,
-`"grid"`, `"clues"` or `"design"` is ignored.  Order is unimportant.
+`"grid"`, `"bars"`, `"clues"` or `"design"` is ignored.  Order is unimportant.
 
 ### Implicit sections
 
@@ -82,8 +82,8 @@ following.  The full example above can be written this way:
     A6. Progenitor. ~ ADAM
     [...]
 
-A design section has no place in that order, so a file using one needs
-headings.  [Nearly every .xd file written so far is headingless, so this form
+A design section or a bars section has no place in that order, so a file
+using one needs headings.  [Nearly every .xd file written so far is headingless, so this form
 stays supported; new files should use headings.]
 
 ### Metadata
@@ -130,6 +130,54 @@ The same key may be assigned more than one value; such a cell accepts any one
 of its values (a Schrödinger cell):
 
     Rebus: 1=O 1=A
+
+### Bars (optional section)
+
+A `## Bars` section holds the bars of a barred grid.  It is a grid of the same
+dimensions as the puzzle grid, with one character per cell:
+
+* '.' -- no bar
+* '|' -- a bar on the cell's left edge
+* '-' -- a bar on the cell's top edge
+* '+' -- both
+
+    ## Grid
+
+    AHIS
+    MENO
+    ATUP
+    DOHI
+
+    ## Bars
+
+    ..|.
+    ..|.
+    --+-
+    ..|.
+
+    ## Clues
+
+    A1. Sound of relief ~ AH
+    A3. Exists ~ IS
+    [...]
+
+    D1. Before noon ~ AM
+    D2. That guy ~ HE
+    [...]
+
+An entry ends at a bar as it does at a block or at the edge of the grid, and
+cells are numbered with the bars in place.  Above, the bars cut the grid into
+quarters, so the first row holds two entries, AH and IS, and the first column
+holds AM and AT.  [Each bar is the left or top edge of exactly
+one cell, so a grid's bars can be written only one way.]
+
+A block may be written '#', as in the puzzle grid, and is read as '.'.  A bar
+on the outer edge of the grid, or between a cell and a block, changes nothing
+and is ignored.
+
+A reader cannot skip this section: without the bars it would find the wrong
+entries.  `border-top` and `border-left` in the Design section are only drawn,
+and never end an entry.
 
 ### Clues
 
@@ -238,8 +286,8 @@ Defined properties:
 * `background-image: url('...')` -- an image drawn in the cell
 * `background-size: N M` -- the image spans N cells to the right and M cells
   downward; defaults to `1 1`
-* `bar-top: true` -- a bar on the top edge of the cell (barred grids)
-* `bar-left: true` -- a bar on the left edge of the cell
+* `border-top: true` -- a line drawn on the top edge of the cell
+* `border-left: true` -- a line drawn on the left edge of the cell
 
 An image is given as a CSS `url()` with a quoted argument.  The url is either
 a data URI, which keeps the image in the file, or a reference to an image
@@ -284,7 +332,7 @@ The CSS-like parser should be able to handle:
     ```css
     A {
       background: circle;
-      bar-top: true;
+      border-top: true;
     }
     ```
 
@@ -292,11 +340,11 @@ The CSS-like parser should be able to handle:
 
     ```css
     A { background: circle }
-    A { bar-top: true }
+    A { border-top: true }
     ```
 
 * Opening many characters at once with a comma: `A, B { background: circle }`
-* Separating many properties via semi colons: `A { background: circle; bar-top: true }`
+* Separating many properties via semi colons: `A { background: circle; border-top: true }`
 * An optional trailing semi colon after the last property: `A { background: circle; }`
 * Quoted values inside a rule body, within which none of `}`, `:`, `;` or
   `,` delimits
@@ -430,7 +478,10 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * A rebus key may be assigned multiple values, declaring a Schrödinger cell.
 * The `## Design` section (adopted from Puzzmo's extension, without its
   `<style>` wrapper) replaces the 'Special' field and lowercase special cells.
-* It is now possible to represent barred-grid Crosswords
+* A `## Bars` section holds the bars of a barred grid.
+* [BREAKING] The Design properties `bar-top` and `bar-left` are renamed
+  `border-top` and `border-left`.  They are only drawn; a bar that ends an
+  entry goes in the Bars section.
 * It is possible to represent background images in the grid
 * A clue line holds a ' ~ '-separated list of answers, usually of size one;
   a Schrödinger slot lists all valid fills.  Answers always spell out rebus
