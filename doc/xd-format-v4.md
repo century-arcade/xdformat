@@ -97,9 +97,7 @@ with the same key are not allowed.
 Field keys are case-insensitive: `Title:`, `title:`, and `TITLE:` are
 equivalent.
 
-The value of a metadata field may carry inline markup for italics, links,
-images and more; the syntax is given in [xdown Formatting](#xdown-formatting)
-below.  The 'Rebus' field is the exception, and is read as plain text.
+The standard metadata fields can use [xdown formatting](#xdown-formatting).
 
 ### Grid
 
@@ -129,11 +127,12 @@ The 'Rebus' field gives each rebus key the strings its cells accept:
 The field's grammar is:
 
     field   := rule (ws rule)*
-    rule    := key "=" text ("|" text)*
+    rule    := key "=" value ("|" value)*
              | key key+ "=" linked ("|" linked)+
-    linked  := segment*
-    segment := char | escape | "(" text ")"
-    text    := (char | escape)*
+    value   := text | "(" text? ")"
+    linked  := segment+
+    segment := char | escape | "(" text? ")"
+    text    := (char | escape)+
     escape  := "\" ("|" | "," | "(" | ")" | "\")
 
 Here `ws` is one or more spaces or tabs, `key` is one grid character, and
@@ -144,11 +143,7 @@ On top of the grammar:
   whether in two rules or twice in one.  A declared key that isn't in the grid
   is ignored.  A key cannot be '=', '|', ',', '(', ')' or '\', so those can't
   appear in the grid.
-* An option of a rule with several keys has one segment per key, or is empty.
-* A segment in parentheses doesn't hold exactly one codepoint, so `(S)` is an
-  error.  `()` is an empty cell, and an option made only of `()` segments is
-  written as the empty option instead.
-* No rule lists the same option twice.
+* An option of a rule with several keys has one segment per key.
 
 [',' separated rules in v3.  It is reserved so that a v3 field such as
 `1=OIL,2=WATER` is an error, rather than one rule whose value is
@@ -166,11 +161,12 @@ different answers, as in a Schrödinger cell, a reading per direction, or ways
 of typing one answer, such as EIGHT and 8.  The answers on the clue lines
 record that.
 
-An empty option means the cell is correct when left empty.  The cell is still
-a white cell, numbered and counted in its entries like any other.  Here cell 1
-is always empty, cell 2 is empty or H, and cell 3 is H or empty:
+`()` is a cell that is correct when left empty.  The cell is still a white
+cell, numbered and counted in its entries like any other.  An option can't be
+empty, so an empty cell is always written `()`.  Here cell 1 is always empty,
+cell 2 is empty or H, and cell 3 is H or empty:
 
-    Rebus: 1= 2=|H 3=H|
+    Rebus: 1=() 2=()|H 3=H|()
 
 Apart from the escapes, every character is literal, including '/' and '=':
 
@@ -213,9 +209,10 @@ across:
 
     Rebus: 12=(SC)(EG)|SE|CG
 
-A slot that reads TEN or is left empty:
+A segment in parentheses can hold any string, so `(S)` is the same as `S`,
+and `()` is an empty cell.  A slot that reads TEN or is left empty:
 
-    Rebus: 123=|TEN
+    Rebus: 123=()()()|TEN
 
 Rules are independent of one another.  In `THE[N|S]O[R|U]TH[E|W][A|E]ST`,
 either of NORTH or SOUTH can go with either of EAST or WEST:
@@ -362,9 +359,11 @@ An answer is what the clue means, written out in full with any rebuses
 expanded; rebus keys never appear in answers.  [This makes clue/answer lines
 independently useful.]  Most clues have exactly one answer.
 
-A clue whose slot has several fills that answer it (a Schrödinger slot) lists
-each of them, with the one the cells' solutions spell first.  Other typings
-of the same answer, such as 8 for EIGHT, add no answers:
+A clue whose slot has several fills that answer it (a Schrödinger slot) can
+list them, with the one the cells' solutions spell first.  Which fills to list
+is the author's choice; a slot that can spell thousands of messages might give
+only one.  Other typings of the same answer, such as 8 for EIGHT, add no
+answers:
 
     Rebus: 1=O|A
 
@@ -397,7 +396,7 @@ space would be lost to editors that trim whitespace.]
 
     A5. What's uttered by a mime ~
 
-A slot that reads TEN or is left empty lists both answers:
+A slot that reads TEN or is left empty can list both answers:
 
     A5. Number that pulled a disappearing act ~ TEN ~
 
@@ -644,12 +643,11 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * A grid cell holds exactly one Unicode codepoint; larger graphemes are rebuses.
 * Metadata field keys and clue metadata keys are case-insensitive; writers
   should emit titlecase.
-* Metadata fields other than 'Rebus' can now be xdown formatted
+* Standard metadata fields can now be xdown formatted
 * [BREAKING] A rebus value is a '|'-separated list of options, the first being
-  the solution, and an option may be empty.  '/' has no meaning in it.  [v3
-  corpus files that used '/' by convention for Schrödinger or directional
-  cells read differently now, and need migrating; see
-  [rebus-conventions.md](rebus-conventions.md).]
+  the solution, and `()` is a cell that is correct when left empty.  '/' has
+  no meaning in it.  [v3 corpus files that used '/' by convention for
+  Schrödinger or directional cells read differently now, and need migrating.]
 * [BREAKING] Rules in the 'Rebus' field are separated only by whitespace.
   ',', '(' and ')' are reserved and '\' escapes, so a v3 field such as
   `1=OIL,2=WATER` is now an error and needs migrating to `1=OIL 2=WATER`.
@@ -664,7 +662,7 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
   entry goes in the Bars section.
 * It is possible to represent background images in the grid
 * [BREAKING] A clue line holds a ' ~ '-separated list of answers, usually of
-  size one; a Schrödinger slot lists each fill that answers the clue.  A tool
+  size one; a Schrödinger slot can list more than one fill.  A tool
   that expects one answer should take the first, or at least not fail on a
   list.  Answers always spell out rebus expansions.  An answer is a single
   word; text following it is ignored.
