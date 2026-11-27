@@ -58,6 +58,8 @@ A file is divided into sections.  A section should start with a
 `## [Section Name]` heading, which declares the lines after it as that section.
 Headings are case-insensitive, and a section whose heading is not `"metadata"`,
 `"grid"`, `"bars"`, `"clues"` or `"design"` is ignored.  Order is unimportant.
+Other sections in common use are listed in
+[Community conventions](#community-conventions).
 
 ### Implicit sections
 
@@ -89,10 +91,11 @@ stays supported; new files should use headings.]
 ### Metadata
 
 The metadata section is a set of metadata fields, one per line, each a
-`Key: value` pair.  Title, Author, Editor, Copyright, and Date are the standard
-metadata fields.  Other fields describing the puzzle semantics are given
-below.  Additional fields are allowed but will be ignored.  Multiple fields
-with the same key are not allowed.
+`Key: value` pair.  The spec gives a meaning to one field, Rebus (see
+[Grid](#grid)).  The fields in common use, such as Title and Author, are
+listed in [Community conventions](#community-conventions).  A reader
+ignores a field it does not know.  Multiple fields with the same key are not
+allowed.
 
 Field keys are case-insensitive: `Title:`, `title:`, and `TITLE:` are
 equivalent.
@@ -251,7 +254,8 @@ colon:
 Metadata keys are case-insensitive: `^Refs:`, `^refs:` and `^REFS:` are the
 same key.  Tools that write .xd should emit them in titlecase (`^Refs:`).
 
-The xd spec does not reserve any keys.
+The spec gives no key a meaning.  The keys in common use are listed in
+[Community conventions](#community-conventions).
 
 ### Design (optional section)
 
@@ -456,6 +460,59 @@ is fine, and a '{' is literal unless a type character follows it.
 
 An empty literal, `{\\}`, is a line break.
 
+## Community conventions
+
+The xd specification above says how a file is read.  This part names the
+metadata fields, clue metadata keys and sections that tools have agreed to
+use collectively.
+
+A value is free text and may carry [xdown](#xdown-formatting) markup, unless
+its entry says otherwise.
+
+### Metadata fields
+
+* `Title` -- the puzzle's title.
+* `Author` -- the constructor, or constructors.
+* `Editor` -- the editor.
+* `Copyright` -- the copyright notice.
+* `Date` -- the date the puzzle was first published, as `YYYY-MM-DD`.  Plain
+  text.
+* `Byline` -- the credit exactly as published, when it says more than Author
+  and Editor: initials, a pen name, an address, a split credit ("Puzzle by
+  John Doe, clues by Mary Jane").  Author and Editor still name the people.
+* `Meta` -- the prompt for a meta, as published.  A meta is a further answer
+  the solver works out from the finished puzzle, as in a contest crossword.
+* `Meta-Answer` -- the meta's answer.  It runs to the end of the line, so it
+  may be a phrase.  Either field may appear without the other.
+* `Notes` -- a short note about the puzzle, on one line.  The gxd converters
+  write the notes of a .puz or ipuz file here.  A longer note goes in a
+  `## Notes` section.
+
+### Clue metadata keys
+
+* `^Refs:` -- the other clues this one refers to, as clue references
+  separated by spaces (`A1 ^Refs: A2 D4`).
+* `^Hint:` -- an easier clue for the same answer, which a solving app may show
+  when the solver asks for help.
+* `^Cite:` -- sources for the facts in the clue, as URLs separated by spaces.
+* `^Printed:` -- the clue's label exactly as the source printed it, when that
+  differs from its xd reference (`A6 ^Printed: 4-5`).  Plain text.
+* `^Fits:` -- the label that fits the grid, when the printed one is a
+  misprint.  Plain text.
+
+### Sections
+
+* `## Notes` -- notes about the puzzle, which a reader may show before the
+  solve.  In a file with headings, this holds what a headingless file has
+  after its clues.
+* `## End Message` -- text to show once the puzzle is solved.
+* `## Start` -- letters printed in the grid for the solver to start from.  It
+  is a grid the same shape as the puzzle, with each given letter in its cell
+  and `.` or `#` in every other cell.
+
+Notes and End Message hold free text with xdown markup, and a blank line
+starts a new paragraph.
+
 ## CHANGELOG
 
 ### 4.0-draft
@@ -475,6 +532,11 @@ still open are tracked in [issues](https://github.com/century-arcade/xdformat/is
 * Metadata field keys and clue metadata keys are case-insensitive; writers
   should emit titlecase.
 * Metadata fields can now be xdown formatted
+* A Community conventions part lists the metadata fields, clue metadata
+  keys and sections that tools agree on, apart from the syntax.  It takes
+  over the list of standard fields, and adds Byline, Meta, Meta-Answer,
+  `^Hint:`, `^Cite:`, `^Printed:`, `^Fits:`, `## Notes`, `## End Message`
+  and `## Start`.
 * A rebus key may be assigned multiple values, declaring a Schrödinger cell.
 * The `## Design` section (adopted from Puzzmo's extension, without its
   `<style>` wrapper) replaces the 'Special' field and lowercase special cells.
