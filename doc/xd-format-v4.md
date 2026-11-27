@@ -253,23 +253,16 @@ the direction:
 
 #### Converted puzzles
 
-A source format may list alternates for a cell without saying whether they
-are different answers, a reading per direction, or the outlet's shortcuts for
-typing a rebus.  A converter that can't tell leaves the cells unlinked, with
-the source's solution first, so that the file accepts exactly what the source
-accepts:
+A source format may list alternates for a cell without saying what they are.
+A converter that can't tell leaves the cells unlinked, with the source's
+solution first, so the file accepts exactly what the source accepts:
 
     Rebus: 1=W/T|T/W|WT|TW|W|T 2=A/R|R/A|AR|RA|A|R 3=R/E|E/R|RE|ER|R|E 4=S/K|K/S|SK|KS|S|K
 
-Linking says something about the puzzle that the source doesn't, so it is left
-to an editor who knows the puzzle.  An editor who knows these cells spell
-STARWARS or STARTREK gives the four keys to one rule.  They put the two
-readings first, so that reveal shows letters, and line up the other typings
-position by position:
+Linking is left to an editor who knows the puzzle, here that the cells spell
+STARWARS or STARTREK:
 
     Rebus: 1234=WARS|TREK|(W/T)(A/R)(R/E)(S/K)|(T/W)(R/A)(E/R)(K/S)|(WT)(AR)(RE)(SK)|(TW)(RA)(ER)(KS)
-
-Linking narrows what is accepted, so W/T beside AR is now rejected.
 
 ### Bars (optional section)
 
