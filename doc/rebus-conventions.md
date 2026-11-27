@@ -10,6 +10,14 @@
 > repeated rebus keys (`Rebus: 1=O 1=A`) declare Schrödinger cells, and a clue
 > line lists all valid answers, ' ~ '-separated, with rebuses always expanded.
 > The rest of this document remains a catalogue of v3-era corpus conventions.
+>
+> **Update 2026-11-13:** following [#12](https://github.com/century-arcade/xdformat/issues/12),
+> the v4.0 draft replaces repeated keys with '|'-separated options
+> (`Rebus: 1=O|A`, the first being the solution), links cells that change
+> together by giving their keys to one rule (`12345=CIGAR|PENIS`), and gives
+> '/' no meaning. The `/` files catalogued in §3 and §4 need migrating to that
+> form. Rules are separated only by whitespace, so the NYT files that join
+> rules with ',' (`1=OIL,2=WATER`) need their commas turned into spaces.
 
 The current spec ([doc/xd-format.md](xd-format.md), v3.0) defines a `Rebus:` header for cells that hold a multi-character or non-standard string:
 
